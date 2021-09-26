@@ -1,9 +1,9 @@
 #include <iostream>
-#include <string>
-#include <string.h>
+#include <iomanip>
+#include <cstring>
 #include <malloc.h>
 using namespace std;
-typedef string info;
+
 typedef struct node *typeptr;
 struct node {
 	string judul; // judul buku
@@ -26,8 +26,9 @@ int main(){
 	string nama,judul; // menampung inputan nama dan judul buku
 	cout<<" Peminjaman buku menggunakan Linked List melingkar"<<endl;
 	buatlist();
-	cout<<sizeof(node);
 	sisipnode("zaidan" , "buku" , 4);
+	sisipnode("noor" , "lari" , 9);
+	sisipnode("irfan" , "palu" , 6);
 	while(true){
 		cout<<" 1. Input Node "<<endl;
 		cout<<" 2. Lihat List"<<endl;
@@ -36,7 +37,7 @@ int main(){
 		cout<<" Pilih : ";
 		cin>>pilih;
 		if(pilih == 1){
-			cout<<" Input Data"<<endl;
+			cout<<"\n Input Data"<<endl;
 			cin.ignore();
 			cout<<" Nama peminjam : ";
 			getline(cin,nama);
@@ -47,18 +48,39 @@ int main(){
 			sisipnode(nama ,judul, waktu);
 			cout<<endl;
 			system("pause");
+			system("cls");
+			
 			
 		}
 		else if(pilih == 2){
-			cout<<" Data peminjaman buku "<<endl;
+			cout<<"\n Data peminjaman buku "<<endl<<endl;
 			cetaklist();
+			cout<<endl<<endl;
+			system("pause");
+			system("cls");
+		}
+		else if(pilih == 3){
+			cout<<"\n Menghapus data "<<endl;
+			cin.ignore();
+			cout<<" Nama peminjam : ";
+			getline(cin,nama);
+			cout<<" Judul buku : ";
+			getline(cin,judul);
+			hapusnode(nama,judul);
+			system("pause");
+			system("cls");
 		}
 		else if(pilih == 4){
 			break;
 		}
+		else{
+			cout<<" Masukkan angka 1,2,3, atau 4 saja"<<endl;
+			system("pause");
+			system("cls");
+		}
 	}
 	
-	cetaklist();
+	
 	
 	
 	
@@ -83,7 +105,7 @@ int listkosong(){
 
 void sisipnode(string peminjam, string buku, int lama_pinjam ){
 	typeptr NB,bantu;
-	NB = (node *)malloc(sizeof(node));
+	NB = new node();
 	NB->peminjam = peminjam;
 	NB->judul = buku;
 	NB->waktu = lama_pinjam;
@@ -114,6 +136,7 @@ void sisipnode(string peminjam, string buku, int lama_pinjam ){
 
 void hapusnode(string peminjam , string judul){
 	typeptr hapus,bantu;
+	bool found = false;
 	if(listkosong()){
 		cout<<" List ini masih kosong "<<endl;
 	}
@@ -125,12 +148,13 @@ void hapusnode(string peminjam , string judul){
 				hapus = bantu->next;
 				bantu->next = hapus->next;
 				free(hapus);
+				found = true;
 				break;
 			}
 			bantu = bantu->next;
 		}
 		
-		if(bantu->next == kepala){ // data tak ditemukan dalam list
+		if(found == false){ // data tak ditemukan dalam list
 			cout<<" Data tidak ditemukan "<<endl;
 		}
 	}
@@ -139,11 +163,19 @@ void hapusnode(string peminjam , string judul){
 void cetaklist(){
 	typeptr bantu;
 	bantu = kepala->next;
+	cout<<setw(64)<<setfill('-')<<'-'<<endl;
+	cout<<setfill(' ');
+	cout<<'|'<<setw(20)<<left<<"Peminjam"<<'|'<<setw(20)<<left;
+	cout<<"Judul"<<'|'<<setw(20)<<left<<"Lama pinjam (hari)"<<'|'<<endl;
+	cout<<setw(64)<<setfill('-')<<'-'<<endl;
+	cout<<setfill(' ');
 	while(bantu != kepala){
-		cout<<" Peminjam    : "<<bantu->peminjam<<endl;
-		cout<<" Judul       : "<<bantu->judul<<endl;
-		cout<<" Lama pinjam : "<<bantu->waktu<<endl<<endl;
+		cout<<'|'<<setw(20)<<left<<bantu->peminjam;
+		cout<<'|'<<setw(20)<<left<<bantu->judul;
+		cout<<'|'<<setw(20)<<left<<bantu->waktu<<"|\n";
 		bantu = bantu->next;
 	}
+	cout<<setw(64)<<setfill('-')<<'-'<<endl;
 	
 }
+
